@@ -18,7 +18,7 @@
         <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex align-items-center mb-3">
           <h5 for="tagid" class="text-nowrap mr-5 mb-0">Tag ID:</h5>
           <input type="number" class="form-control" id="tadid" v-model="tagid"
-            :class="{ 'is-invalid': isTagidInvalid, 'is-valid': !isTagidInvalid }" @input="onTagidInput">
+            :class="{ 'is-invalid': isTagidInvalid, 'is-valid': isTagidValid }" @input="onTagidInput">
           <div class="invalid-feedback" v-if="isTagidInvalid">
             กรุณาใส่ Tag ID
           </div>
@@ -26,7 +26,7 @@
         <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 d-flex align-items-center mb-3">
           <h5 for="appname" class="text-nowrap mr-5 mb-0">App name:</h5>
           <input type="text" class="form-control" id="appname" v-model="appname"
-            :class="{ 'is-invalid': isAppnameInvalid,'is-valid': !isAppnameInvalid }" @input="onAppnameInput">
+            :class="{ 'is-invalid': isAppnameInvalid, 'is-valid': isAppnameValid }" @input="onAppnameInput">
           <div class="invalid-feedback" v-if="isAppnameInvalid">
             กรุณาใส่ App name
           </div>
@@ -36,7 +36,7 @@
         <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center mb-3">
           <h5 for="appteam" class="text-nowrap mr-5 mb-0">App team:</h5>
           <input type="text" class="form-control" id="appteam" v-model="appteam"
-            :class="{ 'is-invalid': isAppteamInvalid,'is-valid': !isAppteamInvalid }" @input="onAppteamInput">
+            :class="{ 'is-invalid': isAppteamInvalid, 'is-valid': isAppteamValid }" @input="onAppteamInput">
           <div class="invalid-feedback" v-if="isAppteamInvalid">
             กรุณาใส่ App team
           </div>
@@ -44,7 +44,7 @@
         <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center mb-3">
           <h5 for="owner" class="text-nowrap mr-5 mb-0">Owner:</h5>
           <input type="text" class="form-control" id="owner" v-model="owner"
-            :class="{ 'is-invalid': isOwnerInvalid,'is-valid': !isOwnerInvalid }" @input="onOwnerInput">
+            :class="{ 'is-invalid': isOwnerInvalid, 'is-valid': isOwnerValid }" @input="onOwnerInput">
           <div class="invalid-feedback" v-if="isOwnerInvalid">
             กรุณาใส่ Owner
           </div>
@@ -54,21 +54,23 @@
         <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex align-items-center mb-3">
           <h5 for="hostname" class="text-nowrap mr-5 mb-0">Hostname:</h5>
           <input type="text" class="form-control" id="hostname" v-model="hostname"
-            :class="{ 'is-invalid': isHostnameInvalid,'is-valid': !isHostnameInvalid }" @input="onHostnameInput">
+            :class="{ 'is-invalid': isHostnameInvalid, 'is-valid': isHostnameValid }" @input="onHostnameInput">
           <div class="invalid-feedback" v-if="isHostnameInvalid">
             กรุณาใส่ Hostname
           </div>
         </div>
         <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex align-items-center mb-3">
           <h5 for="ip" class="text-nowrap mr-5 mb-0">IP:</h5>
-          <input type="text" class="form-control" id="ip" v-model="ip" :class="{ 'is-invalid': isIPInvalid,'is-valid': !isIPInvalid }" @input="onIPInput">
+          <input type="text" class="form-control" id="ip" v-model="ip"
+            :class="{ 'is-invalid': isIPInvalid, 'is-valid': isIPValid }" @input="onIPInput">
           <div class="invalid-feedback" v-if="isIPInvalid">
             กรุณาใส่ IP
           </div>
         </div>
         <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex align-items-center mb-3">
           <h5 for="os" class="text-nowrap mr-5 mb-0">OS:</h5>
-          <select class="form-select" id="os" v-model="os" :class="{ 'is-invalid': isOSInvalid,'is-valid': !isOSInvalid }" @input="onOSInput">
+          <select class="form-select" id="os" v-model="os" :class="{ 'is-invalid': isOSInvalid, 'is-valid': isOSValid }"
+            @input="onOSInput">
             <option selected>Choose...</option>
             <option value="1">One</option>
             <option value="2">Two</option>
@@ -82,7 +84,8 @@
       <div class="row">
         <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center mb-3">
           <h5 for="priority" class="text-nowrap mr-5 mb-0">Priority:</h5>
-          <select class="form-select" v-model="priority" :class="{ 'is-invalid': isPriorityInvalid, 'is-valid': !isPriorityInvalid }" @input="onPriorityInput">
+          <select class="form-select" v-model="priority"
+            :class="{ 'is-invalid': isPriorityInvalid, 'is-valid': isPriorityValid }" @input="onPriorityInput">
             <option selected>Choose...</option>
             <option value="1">One</option>
             <option value="2">Two</option>
@@ -94,7 +97,8 @@
         </div>
         <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center mb-3">
           <h5 for="ma" class="text-nowrap mr-5 mb-0">MA Down time:</h5>
-          <select class="form-select" v-model="ma" :class="{ 'is-invalid': isMAInvalid ,'is-valid': !isMAInvalid}" @input="onMAInput">
+          <select class="form-select" v-model="ma" :class="{ 'is-invalid': isMAInvalid, 'is-valid': isMAValid }"
+            @input="onMAInput">
             <option selected>Choose...</option>
             <option value="1">One</option>
             <option value="2">Two</option>
@@ -160,8 +164,8 @@ export default {
       this.isPriorityInvalid = !this.priority
       this.isMAInvalid = !this.ma
 
-      this.isTagidValid = !this.tagid.length >= 1
-      this.isAppnameValid = !this.appname.length >= 1
+      this.isTagidValid = !this.tagid.length >= 6
+      this.isAppnameValid = !this.appname.length >= 6
       this.isAppteamValid = !this.appteam.length >= 1
       this.isOwnerValid = !this.owner.length >= 1
       this.isHostnameValid = !this.hostname.length >= 1
@@ -169,18 +173,18 @@ export default {
       this.isOSValid = !this.os.length >= 1
       this.isPriorityValid = !this.priority.length >= 1
       this.isMAValid = !this.ma.length >= 1
-      
+
       // if (!this.isEmailInvalid && !this.isPasswordInvalid) {
       //   // Form is valid, do something (e.g. submit it)
       // }
     },
     onTagidInput() {
       this.isTagidInvalid = false
-      this.isTagidValid = this.tagid.length >= 1
+      this.isTagidValid = this.tagid.length >= 6
     },
     onAppnameInput() {
       this.isAppnameInvalid = false
-      this.isAppnameValid = this.appname.length >= 1
+      this.isAppnameValid = this.appname.length >= 6
     },
     onAppteamInput() {
       this.isAppteamInvalid = false
@@ -188,15 +192,15 @@ export default {
     },
     onOwnerInput() {
       this.isOwnerInvalid = false
-      this.isOwnerValid = !this.owner.length >= 1
+      this.isOwnerValid = this.owner.length >= 1
     },
     onHostnameInput() {
       this.isHostnameInvalid = false
-      this.isHostnameValid = !this.hostname.length >= 1
+      this.isHostnameValid = this.hostname.length >= 1
     },
     onIPInput() {
       this.isIPInvalid = false
-      this.isIPValid = !this.ip.length >= 1
+      this.isIPValid = this.ip.length >= 1
     },
     onOSInput() {
       this.isOSInvalid = false
@@ -322,7 +326,7 @@ fetchData()
 }
 
 .is-valid {
-  border-color:#00bcb4;
+  border-color: #00bcb4;
 }
 
 .form-wrap {

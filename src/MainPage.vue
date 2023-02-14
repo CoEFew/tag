@@ -14,7 +14,9 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td>1</td>
+					<td><div v-show="template.test.AppName" class="animate__animated animate__fadeInDown">
+					<p class="text-muted mb-0">{{template.test.AppName}}</p>
+				</div></td>
 					<td>surasak noorurk</td>
 					<td>dev</td>
 					<td class="text-success">success</td>
@@ -69,6 +71,8 @@
  
 
 <script>
+//import API from './services/ApiService.js';
+
 // import axios from "axios";
 import { loadProgressBar } from 'x-axios-progress-bar'
 import 'x-axios-progress-bar/dist/nprogress.css';

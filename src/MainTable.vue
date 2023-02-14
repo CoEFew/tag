@@ -1,5 +1,40 @@
 <template>
   <div class="q-pa-md">
+    <b class="text-name">{{currentUser.Title}}</b>
+   <div>
+     <b>{{ usernameMe.Id }}/</b>
+     <b>{{ usernameMe.Title }}/</b>
+     <b>{{ usernameMe.Email }}/</b>
+   </div>
+    <div class="row">
+      <div class="col">
+        <div class="">
+          <div class="row justify-content-center">
+            <div class="col-lg-3 col-sm-6">
+              <label for="startDate">Start</label>
+              <input id="startDate" class="form-control" type="date" />
+              <span id="startDateSelected"></span>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+              <label for="endDate">End</label>
+              <input id="endDate" class="form-control" type="date" />
+              <span id="endDateSelected"></span>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+              <label for="endDate">search</label>
+              <div class="input-group">
+                <input id="endDate" class="form-control" type="text" />
+                <span id="searchSelected"></span>
+                <q-btn icon="search" />
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
     <div class="q-py-md text-end">
       <button type="button" class="btn btn-green" data-bs-toggle="modal" data-bs-target="#create">
         Generate Tag
@@ -13,7 +48,10 @@
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn icon="edit" @click="onEdit(props.row.id)" />
+          <button type="button" class="btn shadow-1 mx-1" data-bs-toggle="modal" data-bs-target="#create">
+            <img v-bind:src="iconedit" class="iconedit" />
+      </button>
+        <!-- <q-btn icon="edit" @click="onEdit(props.row.id)" />--> 
           <q-btn icon="delete" @click="onDelete(props.row.id)" />
         </q-td>
       </template>
@@ -24,7 +62,7 @@
   <div class="modal fade modal-lg" id="create" tabindex="-1" aria-labelledby="createLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content text-lotus-green">
-        <div class="modal-header row border-0 bg-greens" >
+        <div class="modal-header row border-0 bg-greens">
           <div class="col text-start" id="createLabel">
             <a class="navbar-brand">
               <img src="@/assets/icon/logo.svg" class="img-responsive" style="user-select: none;" height="25">
@@ -78,8 +116,7 @@
                 <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex align-items-center mb-3">
                   <h5 for="hostname" class="text-nowrap mr-5 mb-0">Hostname:</h5>
                   <input type="text" class="form-control" id="hostname" v-model="hostname"
-                    :class="{ 'is-invalid': isHostnameInvalid, 'is-valid': isHostnameValid }"
-                    @input="onHostnameInput">
+                    :class="{ 'is-invalid': isHostnameInvalid, 'is-valid': isHostnameValid }" @input="onHostnameInput">
                   <div class="invalid-feedback" v-if="isHostnameInvalid">
                     กรุณาใส่ Hostname
                   </div>
@@ -110,8 +147,7 @@
                 <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center mb-3">
                   <h5 for="priority" class="text-nowrap mr-5 mb-0">Priority:</h5>
                   <select class="form-select" v-model="priority"
-                    :class="{ 'is-invalid': isPriorityInvalid, 'is-valid': isPriorityValid }"
-                    @input="onPriorityInput">
+                    :class="{ 'is-invalid': isPriorityInvalid, 'is-valid': isPriorityValid }" @input="onPriorityInput">
                     <option selected>Choose...</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -123,8 +159,8 @@
                 </div>
                 <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 d-flex align-items-center mb-3">
                   <h5 for="ma" class="text-nowrap mr-5 mb-0">MA Down time:</h5>
-                  <select class="form-select" v-model="ma"
-                    :class="{ 'is-invalid': isMAInvalid, 'is-valid': isMAValid }" @input="onMAInput">
+                  <select class="form-select" v-model="ma" :class="{ 'is-invalid': isMAInvalid, 'is-valid': isMAValid }"
+                    @input="onMAInput">
                     <option selected>Choose...</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -161,9 +197,28 @@
 </template>
 
 <script>
+  import API from './services/ApiService.js';
+
 export default {
+  async created() {
+      await this.fetchRequestDigest();
+      await this.intervalDigest();
+      this.getCurrentUser();
+    },
   data() {
     return {
+      currentUser: {},
+      usernameMe:[],
+      site_url: process.env.VUE_APP_HOST + process.env.VUE_APP_SITE,
+				Request: [],
+        test:[],
+				template : {
+					test: {},
+				},
+        list: {
+					test: "test",
+				},
+      iconedit: "https://cdn-icons-png.flaticon.com/512/1827/1827933.png",
       tagid: '',
       appname: '',
       appteam: '',
@@ -195,6 +250,24 @@ export default {
     }
   },
   methods: {
+    async fetchRequestDigest() {
+        API.requestDigest().then((response) => {
+          this.$local.set('requestDigest', response.GetContextWebInformation.FormDigestValue);
+          this.intervalDigest();
+        });
+      },
+      async intervalDigest() {
+        setTimeout(() => this.fetchRequestDigest(), 300000);
+      },
+      async getCurrentUser() {
+        API.currentUser().then((response) => {
+          // console.log("getCurrentUser")
+          this.currentUser = response;
+          this.$refs.refReloadData.get_test();
+          this.$refs.refReloadData.get_User(response.Email);
+        });
+      },
+     
     validateForm() {
       this.isTagidInvalid = !this.tagid
       this.isAppnameInvalid = !this.appname
@@ -256,14 +329,56 @@ export default {
       this.isMAInvalid = false
       this.isMAValid = !this.ma.length >= 1
     },
-  }
+  },
+
+
+  mounted(){
+    let vm = this
+    var headers = { accept: "application/json;odata=verbose" };
+    axios.get('http://localhost:8080/teams/testSharePointep1/_api/web/CurrentUser', { headers })
+    .then((response) => {
+      console.log("ssss",response)
+      vm.usernameMe = response.data.d
+			return response.data.d;
+		});
+    let vms = this
+    var url = vms.site_url + "/Lists/test/items?$select=AppName";
+    axios.get('http://localhost:8080/teams/testSharePointep1/Lists/test', { headers })
+    .then((response) => {
+      console.log("www", response.data)
+      vms.test = response.data.data.HostName
+			return response.data.data.HostName;
+		})
+    API.url(url).then((response) => {
+      console.log("res", response)
+					if(response.length != 0) {
+						this.template.test = response;
+					}else {
+						this.template_status = false;
+					}
+				})
+  },
+  // get_test() {
+  //   let vms = this
+  //   var headers = { accept: "application/json;odata=verbose" };
+  //   axios.get('http://localhost:8080/teams/testSharePointep1/Lists/test', { headers })
+  //   .then((response) => {
+  //     console.log("www",response)
+  //     vms.test = response.data
+	// 		return response.data;
+	// 	});
+	// 		},
 }
 </script>
 
 <script setup>
 //   import { result } from 'lodash';
 import { ref } from "vue";
-import router from "./router";
+// import router from "./router";
+import axios from "axios";
+
+
+
 const columns = ref([
   { name: "id", align: "left", label: "tagID", field: "id", sortable: true },
   {
@@ -296,10 +411,10 @@ const columns = ref([
     sortable: true,
   },
   {
-    name: "",
+    name: "Id",
     align: "center",
     label: "OperationSystem",
-    field: "",
+    field: "Id",
     sortable: true,
   },
   {
@@ -327,6 +442,7 @@ const fetchData = () => {
     });
 };
 fetchData();
+
 
 // const fname = ref("")
 // const lname = ref("")
@@ -368,9 +484,10 @@ fetchData();
 //   .catch(error => console.log('error', error));
 // }
 
-const onEdit = (id) => {
-  router.push('/updateview/' + id)
-};
+// const onEdit = (id) => {
+//  // router.push('/updateview/' + id)
+
+// };
 
 const onDelete = (id) => {
   var myHeaders = new Headers();
@@ -449,11 +566,21 @@ const onDelete = (id) => {
   --bs-gradient: none;
 }
 
-.bg-greens{
- background-color: #00bcb4;
+.bg-greens {
+  background-color: #00bcb4;
 }
+
 .is-valid {
-  border-color:#00bcb4;
+  border-color: #00bcb4;
+}
+
+.iconedit {
+    max-width: 20px;
+    width: 100%;
+}
+
+.shadow-1 {
+  box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%);
 }
 </style>
 

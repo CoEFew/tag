@@ -22,10 +22,10 @@
 
         <span class="navbar-text text-end">
           <div style="margin-top:-14px;">
-            <b style="color:#fff;user-select: none;">{{currentUser.Title}}</b>
+            <b class="text-name">{{currentUser.Title}}</b>
           </div>
           <div style="margin-top:-10px;margin-bottom: -15px;">
-            <p class="mb-0 mt-1" style="color: rgb(81 81 81 / 72%);font-size:12px;user-select: none;font-weight: 600;">{{currentUser.Email}}</p>
+            <p class="mb-0 mt-1 text-email"  style="">{{currentUser.Email}}</p>
           </div>
         </span>
       </div>
@@ -45,6 +45,8 @@
     name: 'App',
     components: {},
     async created() {
+      await this.fetchRequestDigest();
+      await this.intervalDigest();
       this.getCurrentUser();
     },
     data() {
@@ -55,9 +57,21 @@
       };
     },
     methods: {
+      async fetchRequestDigest() {
+        API.requestDigest().then((response) => {
+          this.$local.set('requestDigest', response.GetContextWebInformation.FormDigestValue);
+          this.intervalDigest();
+        });
+      },
+      async intervalDigest() {
+        setTimeout(() => this.fetchRequestDigest(), 300000);
+      },
       async getCurrentUser() {
         API.currentUser().then((response) => {
+          // console.log("getCurrentUser")
           this.currentUser = response;
+          this.$refs.refReloadData.get_Season();
+          this.$refs.refReloadData.get_User(response.Email);
         });
       },
       async get_group_admin() {
@@ -65,10 +79,8 @@
           var group_admin_name = "administrator";
           var status_admin = response.filter(function (obj) { return obj.Title == group_admin_name }).length != 0;
           this.currentUser.admin = status_admin;
-          this.get_sturcture();
         });
       },
-      
     },
   }
 </script>
